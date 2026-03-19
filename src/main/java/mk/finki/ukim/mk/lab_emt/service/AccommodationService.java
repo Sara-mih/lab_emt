@@ -5,6 +5,7 @@ import mk.finki.ukim.mk.lab_emt.model.dto.AccommodationRequestDto;
 
 import mk.finki.ukim.mk.lab_emt.model.domain.Accommodation;
 import mk.finki.ukim.mk.lab_emt.model.dto.AccommodationRequestDto;
+import mk.finki.ukim.mk.lab_emt.model.dto.HostStatsDto;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface AccommodationService {
     void deleteById(Long id);
 
     Accommodation markAsRented(Long id);
+
+    HostStatsDto getHostStats(Long hostId);
 }

@@ -4,6 +4,7 @@ import mk.finki.ukim.mk.lab_emt.model.domain.Accommodation;
 import mk.finki.ukim.mk.lab_emt.model.domain.Condition;
 import mk.finki.ukim.mk.lab_emt.model.domain.Host;
 import mk.finki.ukim.mk.lab_emt.model.dto.AccommodationRequestDto;
+import mk.finki.ukim.mk.lab_emt.model.dto.HostStatsDto;
 import mk.finki.ukim.mk.lab_emt.model.exception.AccommodationNotFoundException;
 import mk.finki.ukim.mk.lab_emt.model.exception.HostNotFoundException;
 import mk.finki.ukim.mk.lab_emt.repository.AccommodationRepository;
@@ -71,5 +72,38 @@ public class AccommodationalSeviceImpl implements AccommodationService {
         accommodation.setRented(true);
         accommodation.setCondition(Condition.GOOD);
         return accommodationRepository.save(accommodation);
+    }
+
+    @Override
+    public HostStatsDto getHostStats(Long hostId) {
+        List<Accommodation> accommodations = accommodationRepository.findAllByHostId(hostId);
+
+        Long totalAccommodations = accommodations.stream()
+                .mapToLong(Accommodation::getNumRooms)
+                .sum();
+
+        Long totalRoomsGood = accommodationRepository
+                .findAllByHostIdAndCondition(hostId, Condition.GOOD)
+                .stream()
+                .mapToLong(Accommodation::getNumRooms)
+                .sum();
+
+        Long totalRoomsBad = accommodationRepository
+                .findAllByHostIdAndCondition(hostId, Condition.BAD)
+                .stream()
+                .mapToLong(Accommodation::getNumRooms)
+                .sum();
+
+        Long totalRentedRooms = accommodationRepository
+                .findAllByHostIdAndIsRented(hostId, true)
+                .stream()
+                .mapToLong(Accommodation::getNumRooms)
+                .sum();
+
+        return new HostStatsDto(
+                totalAccommodations,
+                new HostStatsDto.ConditionStats(totalRoomsGood, totalRoomsBad),
+                totalRentedRooms
+        );
     }
 }
