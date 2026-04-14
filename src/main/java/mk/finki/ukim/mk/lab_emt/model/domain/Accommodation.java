@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +17,20 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "accommodations")
 @AllArgsConstructor
+@NamedEntityGraph(
+        name = "Accommodation.withHostAndCountry",
+        attributeNodes = {
+                @NamedAttributeNode(value = "host", subgraph = "host-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "host-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("country")
+                        }
+                )
+        }
+)
 public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
