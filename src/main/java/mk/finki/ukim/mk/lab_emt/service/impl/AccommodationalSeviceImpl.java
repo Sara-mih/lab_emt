@@ -2,10 +2,7 @@ package mk.finki.ukim.mk.lab_emt.service.impl;
 
 import jakarta.transaction.Transactional;
 import mk.finki.ukim.mk.lab_emt.event.AccommodationRentedEvent;
-import mk.finki.ukim.mk.lab_emt.model.domain.Accommodation;
-import mk.finki.ukim.mk.lab_emt.model.domain.Category;
-import mk.finki.ukim.mk.lab_emt.model.domain.Condition;
-import mk.finki.ukim.mk.lab_emt.model.domain.Host;
+import mk.finki.ukim.mk.lab_emt.model.domain.*;
 import mk.finki.ukim.mk.lab_emt.model.dto.AccommodationRequestDto;
 import mk.finki.ukim.mk.lab_emt.model.dto.AccommodationResponseDto;
 import mk.finki.ukim.mk.lab_emt.model.dto.HostStatsDto;
@@ -15,6 +12,7 @@ import mk.finki.ukim.mk.lab_emt.model.projection.AccommodationDetailsProjection;
 import mk.finki.ukim.mk.lab_emt.model.projection.AccommodationShortProjection;
 import mk.finki.ukim.mk.lab_emt.repository.AccommodationRepository;
 import mk.finki.ukim.mk.lab_emt.repository.HostRepository;
+import mk.finki.ukim.mk.lab_emt.repository.ReservationRepository;
 import mk.finki.ukim.mk.lab_emt.service.AccommodationService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
@@ -28,11 +26,16 @@ public class AccommodationalSeviceImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final HostRepository hostRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final ReservationRepository reservationRepository;
 
-    public AccommodationalSeviceImpl(AccommodationRepository accommodationRepository, HostRepository hostRepository, ApplicationEventPublisher eventPublisher) {
+    public AccommodationalSeviceImpl(AccommodationRepository accommodationRepository,
+                                     HostRepository hostRepository,
+                                     ApplicationEventPublisher eventPublisher,
+                                     ReservationRepository reservationRepository) {
         this.accommodationRepository = accommodationRepository;
         this.hostRepository = hostRepository;
         this.eventPublisher = eventPublisher;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -84,6 +87,7 @@ public class AccommodationalSeviceImpl implements AccommodationService {
         accommodation.setRented(true);
         accommodation.setCondition(Condition.GOOD);
         Accommodation saved = accommodationRepository.save(accommodation);
+        reservationRepository.save(new Reservation(saved));
         eventPublisher.publishEvent(new AccommodationRentedEvent(saved));
         return saved;
     }
