@@ -6,4 +6,7 @@ import java.util.List;
 public interface CountryService {
     List<Country> findAll();
     Country findById(Long id);
+    Country update(Long id, Country country);
+    void deleteById(Long id);
+    Country create(Country country);
 }

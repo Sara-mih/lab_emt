@@ -76,6 +76,9 @@ public class AccommodationalSeviceImpl implements AccommodationService {
         if (!accommodationRepository.existsById(id)) {
             throw new AccommodationNotFoundException(id);
         }
+        reservationRepository.deleteAll(
+                reservationRepository.findAllByAccommodationId(id)
+        );
         accommodationRepository.deleteById(id);
     }
 

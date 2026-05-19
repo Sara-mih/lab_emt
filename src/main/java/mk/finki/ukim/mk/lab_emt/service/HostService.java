@@ -6,4 +6,7 @@ import java.util.List;
 public interface HostService {
     List<Host> findAll();
     Host findById(Long id);
+    Host update(Long id, String name, String surname, Long countryId);
+    void deleteById(Long id);
+    Host create(Host host);
 }

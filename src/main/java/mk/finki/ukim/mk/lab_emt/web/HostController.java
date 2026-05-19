@@ -26,4 +26,20 @@ public class HostController {
     public ResponseEntity<Host> findById(@PathVariable Long id) {
         return ResponseEntity.ok(hostService.findById(id));
     }
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<Host> update(@PathVariable Long id, @RequestBody HostUpdateRequest request) {
+        return ResponseEntity.ok(hostService.update(id, request.name(), request.surname(), request.countryId()));
+    }
+
+    record HostUpdateRequest(String name, String surname, Long countryId) {}
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        hostService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping
+    public ResponseEntity<Host> create(@RequestBody Host host) {
+        return ResponseEntity.ok(hostService.create(host));
+    }
 }

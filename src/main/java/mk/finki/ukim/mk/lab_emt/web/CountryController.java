@@ -25,4 +25,19 @@ public class CountryController {
     public ResponseEntity<Country> findById(@PathVariable Long id) {
         return ResponseEntity.ok(countryService.findById(id));
     }
+
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<Country> update(@PathVariable Long id, @RequestBody Country country) {
+        return ResponseEntity.ok(countryService.update(id, country));
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        countryService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping
+    public ResponseEntity<Country> create(@RequestBody Country country) {
+        return ResponseEntity.ok(countryService.create(country));
+    }
 }
