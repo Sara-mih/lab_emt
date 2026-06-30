@@ -18,7 +18,7 @@ services:
 
   backend:
     build:
-      context: ./lab_emt
+      context: .
       dockerfile: Dockerfile
     container_name: lab_emt_backend
     depends_on:
@@ -33,7 +33,7 @@ services:
 
   frontend:
     build:
-      context: ./Accommodation-ui
+      context: ../Accommodation-ui
       dockerfile: Dockerfile
     container_name: accommodation_frontend
     depends_on:
